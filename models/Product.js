@@ -1,54 +1,50 @@
-// import important parts of sequelize library
 const { Model, DataTypes } = require('sequelize');
-// import our database connection from config.js
 const sequelize = require('../config/connection');
 
-// Initialize Product model (table) by extending off Sequelize's Model class
+// Define Product model structure
 class Product extends Model {}
 
-// set up fields and rules for Product model
 Product.init(
   {
-    // define columns
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true // Automatically increment the ID for new entries
     },
     product_name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false // Require a product name for each entry
     },
     price: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DECIMAL(10, 2), // Specify precision for the price
       allowNull: false,
       validate: {
-        isDecimal: true
+        isDecimal: true // Ensure the price is in decimal format
       }
     },
     stock: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 10,
+      defaultValue: 10, // Set a default value for stock
       validate: {
-        isNumeric: true
+        isNumeric: true // Ensure the stock value is numeric
       }
     },
     category_id: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'category',
-        key: 'id'
+        model: 'category', // This should match the table name
+        key: 'id' // The column in the category table to which this field refers
       }
     }
   },
   {
-    sequelize,
-    timestamps: false,
-    freezeTableName: true,
-    underscored: true,
-    modelName: 'product',
+    sequelize, // Pass the connection instance
+    timestamps: false, // Do not automatically add timestamp fields
+    freezeTableName: true, // Prevent Sequelize from renaming the table
+    underscored: true, // Use snake_case rather than camelCase for database fields
+    modelName: 'product', // Define the name used for the model
   }
 );
 
